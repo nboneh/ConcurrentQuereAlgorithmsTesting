@@ -1,17 +1,8 @@
 package com.concurrency.queue;
 
-import java.util.ArrayList;
-import java.util.List;
+public interface  Queue<T> {
 
-public abstract class Queue<T> {
-	
-	List<T> queue;
-	
-	Queue(){
-		queue = new ArrayList<T>();
-	}
+	 public void enqueue(T element);
 
-	abstract void enqueue(T element);
-	
-	abstract T deque();
+	 public T deque() throws EmptyQueueException;
 }
