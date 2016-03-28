@@ -1,9 +1,8 @@
+package com.concurrency.queue;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import com.concurrency.queue.Queue;
-import com.concurrency.queue.SequentialQueue;
 
 
 public class QueueTest {
