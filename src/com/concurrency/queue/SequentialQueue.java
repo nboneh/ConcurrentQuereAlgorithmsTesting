@@ -5,23 +5,34 @@ import java.util.List;
 
 public class SequentialQueue<T> implements Queue<T> {
 	//Just a basic squential list queue implementation
-	private List<T> queue;
+	private List<Node<T>> queue;
 	
 	public SequentialQueue(){
-		queue = new ArrayList<T>();
+		queue = new ArrayList<Node<T>>();
 	}
 	@Override
-	public void enqueue(T element) {
-		queue.add(element);
+	public void add(T element, int score) {
+		queue.add(new Node<T>(element, score));
 	}
 
 	@Override
-	public T deque() throws EmptyQueueException{
-		if(queue.size() <1)
+	public T removeMin() throws EmptyQueueException{
+		if(queue.isEmpty())
 			throw new EmptyQueueException();
-		T popElem = queue.get(0);
-		queue.remove(0);
-		return popElem;
+		
+		int index = 0;
+		int lowestScore = Integer.MAX_VALUE;
+		for(int i = 0; i < queue.size(); i++){
+			Node<T> node = queue.get(i);
+			if(lowestScore > node.score){
+				index = i;
+				lowestScore = node.score;
+			}
+		}
+		
+		Node<T> node = queue.get(index);
+		queue.remove(index);
+		return node.value;
 	}
 
 }
