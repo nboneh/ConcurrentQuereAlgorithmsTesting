@@ -9,44 +9,156 @@ public class QueueTest {
 	@Test
 	public void testSequential() {
 		Queue<Integer> sequentialQueue = new SequentialQueue<Integer>();
-		try {
-			assertEquals(testQueueSequentially(sequentialQueue), true);
+		try{
+			testQueueSequentially(sequentialQueue);
 		} catch (EmptyQueueException e) {
-			fail("Failed Sequential Test");
+			fail("Expected non empty queue, sequential ");
+		}
+		
+		try {
+			testQueueConcurrently(sequentialQueue);
+		} catch (EmptyQueueException e) {
+			fail("Expected non empty queue,concurrent ");
+		} catch (InterruptedException e) {
+			fail("Threads were interrupted ");
 		}
 	}
 	
-	public boolean testQueueSequentially(Queue<Integer> queue) throws EmptyQueueException{
+	@Test
+	public void testArrayQueue(){
+		testConcurrentQueue(new ArrayQueue<Integer>());
+	}
+	
+	@Test
+	public void testTreeQueue(){
+		testConcurrentQueue(new TreeQueue<Integer>());
+	}
+	
+	@Test
+	public void testHeapQueue(){
+		testConcurrentQueue(new HeapQueue<Integer>());
+	}
+	
+	@Test
+	public void testSkipListQueue(){
+		testConcurrentQueue( new SkipListQueue<Integer>());
+	}
+	
+	public void testConcurrentQueue(Queue<Integer> queue){
+		try{
+			testQueueSequentially(queue);
+		} catch (EmptyQueueException e) {
+			fail("Expected non empty queue, sequential ");
+		}
+		
+		try {
+			testQueueConcurrently(queue);
+		} catch (EmptyQueueException e) {
+			fail("Expected non empty queue,concurrent ");
+		} catch (InterruptedException e) {
+			fail("Threads were interrupted ");
+		}
+	}
+
+	public void testQueueSequentially(Queue<Integer> queue) throws EmptyQueueException{
 		try {
 			queue.removeMin();
-			return false;
+			fail("Empty queue  did not throw excpetion");
 		} catch (EmptyQueueException e) {
 			//Queue should be empty so good
 		}
 		queue.add(5,1);
 		if(queue.removeMin() != 5)
-			return false;
-		
+			fail("Queue did not return 5");
+
 		queue.add(6,4);
 		queue.add(9,3);
 		queue.add(3,2);
-		
+
 		if(queue.removeMin() != 3)
-			return false;
-		
+			fail("Queue did not return 3");
+
 		if(queue.removeMin() != 9)
-			return false;
-		
+			fail("Queue did not return 9");
+
 		if(queue.removeMin() != 6)
-			return false;
-		
+			fail("Queue did not return 6");
+
 		try {
 			queue.removeMin();
-			return false;
+			fail("Expected empty queue");
 		} catch (EmptyQueueException e) {
 			//Queue should be empty so good
 		}
+	}
+	
+	abstract class TestThread implements Runnable{
+		boolean threadPassed = true;
+		 int index;
 		
+		TestThread(int index){
+			this.index = index;
+		}
+	}
+
+	public boolean testQueueConcurrently(Queue<Integer> queue) throws EmptyQueueException, InterruptedException{
+		int numOfThreads = 50;
+		Thread threads[] = new Thread[numOfThreads];
+		
+		int midIndex = (numOfThreads/2);
+		TestThread rMid = null;
+		for(int i = 0; i < numOfThreads; i++){
+			//Create loop
+			TestThread r = new TestThread(i){
+				@Override
+				public void run() {
+					if(index == midIndex){
+						//Thread in the middle enques lowest score checks that remove min 
+						//returns that value
+						queue.add(150, 0);
+						try{
+							if(queue.removeMin() != 150){
+								threadPassed = false;
+							}
+						} catch (EmptyQueueException e) {
+							//Queue should be empty so good
+						}
+					}
+					//All threads add normal values
+					queue.add(index,index+1);
+				}
+			};
+			Thread t = new Thread(r);
+			threads[i] = t;
+			if(i == midIndex)
+				rMid = r;
+		}
+		for(int i = 0; i < numOfThreads; i++){
+			//start loop
+			threads[i].run();
+		}
+		for(int i = 0; i < numOfThreads; i++){
+			//wait loop
+			threads[i].join();
+		}
+		
+		if(rMid.threadPassed ){
+			fail("Middle thread test failed");
+		}
+
+		//Testing that all threads added to the queue correctly
+		for(int i = 0; i < numOfThreads; i++){
+			if( i != queue.removeMin())
+				fail("Excpect value: " + i);
+		}
+
+		try {
+			queue.removeMin();
+			fail("Expected empty queue");
+		} catch (EmptyQueueException e) {
+			//Queue should be empty so good
+		}
+
 		return true;
 	}
 

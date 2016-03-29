@@ -12,11 +12,14 @@ public class SequentialQueue<T> implements Queue<T> {
 	}
 	@Override
 	public void add(T element, int score) {
+		synchronized(this){
 		queue.add(new Node<T>(element, score));
+		}
 	}
 
 	@Override
 	public T removeMin() throws EmptyQueueException{
+		synchronized(this){
 		if(queue.isEmpty())
 			throw new EmptyQueueException();
 		
@@ -33,6 +36,7 @@ public class SequentialQueue<T> implements Queue<T> {
 		Node<T> node = queue.get(index);
 		queue.remove(index);
 		return node.value;
+		}
 	}
 
 }

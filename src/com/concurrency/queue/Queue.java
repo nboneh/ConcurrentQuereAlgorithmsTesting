@@ -10,6 +10,7 @@ public interface  Queue<T> {
 			this.score = score;
 		 }
 	}
+	
 	 public void add(T element, int score);
 
 	 public T removeMin() throws EmptyQueueException;
