@@ -4,7 +4,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 
-
 public class QueueTest {
 	@Test
 	public void testSequential() {
@@ -13,14 +12,6 @@ public class QueueTest {
 			testQueueSequentially(sequentialQueue);
 		} catch (EmptyQueueException e) {
 			fail("Expected non empty queue, sequential ");
-		}
-		
-		try {
-			testQueueConcurrently(sequentialQueue);
-		} catch (EmptyQueueException e) {
-			fail("Expected non empty queue,concurrent ");
-		} catch (InterruptedException e) {
-			fail("Threads were interrupted ");
 		}
 	}
 	
@@ -36,7 +27,7 @@ public class QueueTest {
 	
 	@Test
 	public void testHeapQueue(){
-		testConcurrentQueue(new HeapQueue<Integer>());
+		testConcurrentQueue(new HeapQueue<Integer>(20000));
 	}
 	
 	@Test
@@ -83,7 +74,6 @@ public class QueueTest {
 
 		if(queue.removeMin() != 6)
 			fail("Queue did not return 6");
-
 		try {
 			queue.removeMin();
 			fail("Expected empty queue");
@@ -93,16 +83,19 @@ public class QueueTest {
 	}
 	
 	abstract class TestThread implements Runnable{
-		boolean threadPassed = true;
+		boolean threadPassed;
 		 int index;
 		
 		TestThread(int index){
 			this.index = index;
+			threadPassed = true;
 		}
 	}
 
 	public boolean testQueueConcurrently(Queue<Integer> queue) throws EmptyQueueException, InterruptedException{
-		int numOfThreads = 50;
+		//Have to make a lot of threads otherwise passes a sequential queue
+		//Watch out can still pass sometimes by luck, but only guaranteed to pass if concurrently correct
+		int numOfThreads = 20000;
 		Thread threads[] = new Thread[numOfThreads];
 		
 		int midIndex = (numOfThreads/2);
@@ -117,11 +110,11 @@ public class QueueTest {
 						//returns that value
 						queue.add(150, 0);
 						try{
-							if(queue.removeMin() != 150){
+							if(queue.removeMin() !=150 ){
 								threadPassed = false;
 							}
 						} catch (EmptyQueueException e) {
-							//Queue should be empty so good
+							fail("Queue should have been not empty, middle thread test");
 						}
 					}
 					//All threads add normal values
@@ -130,8 +123,9 @@ public class QueueTest {
 			};
 			Thread t = new Thread(r);
 			threads[i] = t;
-			if(i == midIndex)
+			if(i == midIndex){
 				rMid = r;
+			}
 		}
 		for(int i = 0; i < numOfThreads; i++){
 			//start loop
@@ -143,7 +137,7 @@ public class QueueTest {
 			threads[i].join();
 		}
 		
-		if(rMid.threadPassed ){
+		if(!rMid.threadPassed ){
 			fail("Middle thread test failed");
 		}
 
