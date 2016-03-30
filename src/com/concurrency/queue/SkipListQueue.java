@@ -1,16 +1,22 @@
 package com.concurrency.queue;
 
+import com.concurrency.queue.PrioritySkipList.Node;
+
 public class SkipListQueue<T> implements Queue<T> {
-
-	@Override
-	public void add(T element, int score) {
-		// TODO Auto-generated method stub
-		
+	PrioritySkipList<T> skiplist;
+	public SkipListQueue() {
+		skiplist = new PrioritySkipList<T>();
 	}
-
-	@Override
+	public void add(T item, int score) {;
+		skiplist.add(item,score);
+	}
 	public T removeMin() throws EmptyQueueException {
-		// TODO Auto-generated method stub
-		return null;
+		Node<T> node = skiplist.findAndMarkMin();
+		if (node != null) {
+			skiplist.remove(node.item);
+			return node.item;
+		} else{
+			throw new EmptyQueueException();
+		}
 	}
 }

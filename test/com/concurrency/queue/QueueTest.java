@@ -114,7 +114,7 @@ public class QueueTest {
 								threadPassed = false;
 							}
 						} catch (EmptyQueueException e) {
-							fail("Queue should have been not empty, middle thread test");
+							threadPassed = false;
 						}
 					}
 					//All threads add normal values
