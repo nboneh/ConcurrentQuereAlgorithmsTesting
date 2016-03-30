@@ -17,7 +17,7 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>());
+		testConcurrentQueue(new ArrayQueue<Integer>(52));
 	}
 	
 	@Test
@@ -105,8 +105,7 @@ public class QueueTest {
 			TestThread r = new TestThread(i){
 				@Override
 				public void run() {
-					//Mid index test was causing bugs
-					/*if(index == midIndex){
+					if(index == midIndex){
 						//Thread in the middle enques lowest score checks that remove min 
 						//returns that value
 						queue.add(150, 0);
@@ -117,7 +116,7 @@ public class QueueTest {
 						} catch (EmptyQueueException e) {
 							threadPassed = false;
 						}
-					}*/
+					}
 					//All threads add normal values
 					queue.add(index,index+1);
 				}
@@ -132,6 +131,7 @@ public class QueueTest {
 			//start loop
 			threads[i].start();
 		}
+		
 		for(int i = 0; i < numOfThreads; i++){
 			//wait loop
 			threads[i].join();

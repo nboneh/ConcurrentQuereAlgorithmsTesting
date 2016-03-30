@@ -1,7 +1,9 @@
 package com.concurrency.queue;
 
+
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class SequentialQueue<T> implements Queue<T> {
 	private static class Node<T> {
@@ -20,6 +22,7 @@ public class SequentialQueue<T> implements Queue<T> {
 	public SequentialQueue(){
 		queue = new ArrayList<Node<T>>();
 	}
+	
 	@Override
 	public void add(T element, int score) {
 		queue.add(new Node<T>(element, score));
