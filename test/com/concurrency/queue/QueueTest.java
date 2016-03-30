@@ -26,7 +26,7 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>());
+		testConcurrentQueue(new ArrayQueue<Integer>(52));
 	}
 	
 	@Test
@@ -135,8 +135,9 @@ public class QueueTest {
 		}
 		for(int i = 0; i < numOfThreads; i++){
 			//start loop
-			threads[i].run();
+			threads[i].start();
 		}
+		
 		for(int i = 0; i < numOfThreads; i++){
 			//wait loop
 			threads[i].join();

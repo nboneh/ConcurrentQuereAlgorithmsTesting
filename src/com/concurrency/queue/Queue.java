@@ -8,7 +8,6 @@ public interface  Queue<T> {
 		 Node(T value, int score){
 			this.value = value;
 			this.score = score;
-			
 		 }
 	}
 	
