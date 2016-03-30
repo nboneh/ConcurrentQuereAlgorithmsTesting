@@ -17,7 +17,7 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>(52));
+		testConcurrentQueue(new ArrayQueue<Integer>(20001));
 	}
 	
 	@Test

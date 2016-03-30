@@ -42,7 +42,7 @@ public class ArrayQueue<T> implements Queue<T> {
 			Node oldTop = top;
 			synchronized(oldTop){
 				T value = oldTop.value;
-				top = oldTop.next;
+				if (value != null) top = oldTop.next;  // Don't change top if there is nothing there
 				return value;
 			}
 		}
@@ -55,15 +55,11 @@ public class ArrayQueue<T> implements Queue<T> {
 	}
 
 	@Override
-	public T removeMin() {
+	public T removeMin() throws EmptyQueueException{
 		for (int i=0; i<range; i++){
 			T item = queue[i].pop();
 			if (item != null) return item;
 		}
-		
-		
-		
-		return null;
+		throw new EmptyQueueException();
 	}
-
 }

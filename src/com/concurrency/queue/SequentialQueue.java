@@ -16,7 +16,7 @@ public class SequentialQueue<T> implements Queue<T> {
 			
 		 }
 	}
-	//Just a basic squential list queue implementation
+	//Just a basic sequential list queue implementation
 	private List<Node<T>> queue;
 
 	public SequentialQueue(){
