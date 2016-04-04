@@ -5,6 +5,7 @@ import org.junit.Test;
 
 
 public class QueueTest {
+	private static final int NUM_OF_THREADS = 500;
 	@Test
 	public void testSequential() {
 		Queue<Integer> sequentialQueue = new SequentialQueue<Integer>();
@@ -17,22 +18,22 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>(20001));
+		testConcurrentQueue(new ArrayQueue<Integer>(NUM_OF_THREADS+1));
 	}
 	
 	@Test
 	public void testTreeQueue(){
-		// testConcurrentQueue(new TreeQueue<Integer>(20000));
+		 testConcurrentQueue(new TreeQueue<Integer>((int)(Math.log(NUM_OF_THREADS / Math.log(2)))+ 1));
 	}
 	
 	@Test
 	public void testHeapQueue(){
-		testConcurrentQueue(new HeapQueue<Integer>(20000));
+		testConcurrentQueue(new HeapQueue<Integer>(NUM_OF_THREADS));
 	}
 	
 	@Test
 	public void testSkipListQueue(){
-		// testConcurrentQueue( new SkipListQueue<Integer>());
+		 testConcurrentQueue( new SkipListQueue<Integer>());
 	}
 	
 	public void testConcurrentQueue(Queue<Integer> queue){
@@ -95,8 +96,8 @@ public class QueueTest {
 	public boolean testQueueConcurrently(Queue<Integer> queue) throws EmptyQueueException, InterruptedException{
 		//Have to make a lot of threads otherwise passes a sequential queue
 		//Watch out can still pass sometimes by luck, but only guaranteed to pass if concurrently correct
-		int numOfThreads = 20000;
-		Thread threads[] = new Thread[numOfThreads];
+		int numOfThreads = NUM_OF_THREADS;
+		Thread threads[] = new Thread[NUM_OF_THREADS];
 		
 		int midIndex = (numOfThreads/2);
 		TestThread rMid = null;

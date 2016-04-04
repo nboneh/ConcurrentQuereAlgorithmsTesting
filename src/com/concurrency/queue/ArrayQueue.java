@@ -1,28 +1,30 @@
 package com.concurrency.queue;
 
 public class ArrayQueue<T> implements Queue<T> {
-	int range;
-	Stack<T>[] queue;
-	
-	public ArrayQueue(int range){
-		this.range = range;
-		queue = (Stack<T>[])new Stack[range];
-		for(int i=0; i<range; i++){
-			queue[i] = new Stack();
-		}
-	}
-	
-	@Override
-	public void add(T element, int score) {
-		queue[score].push(element);
-	}
+	 int range;
+	  Bin<T>[] pqueue; 
+	  public ArrayQueue(int range) {
+	    this.range = range;
+	    pqueue = (Bin<T>[])new Bin[range]; 
+	    for (int i = 0; i < pqueue.length; i++){
+	      pqueue[i] = new Bin<T>();
+	    }
+	  }
+	  
+	  @Override
+	  public void add(T item, int key) {
+	    pqueue[key].put(item);
+	  }
+	  
+	  @Override
+	  public T removeMin() throws EmptyQueueException{
+	    for (int i = 0; i < range; i++) { 
+	       T item = pqueue[i].get();
+	       if (item != null) {
+	         return item;
+	       }
+	    }
+	    throw new EmptyQueueException(); 
+	  }
 
-	@Override
-	public T removeMin() throws EmptyQueueException{
-		for (int i=0; i<range; i++){
-			T item = queue[i].pop();
-			if (item != null) return item;
-		}
-		throw new EmptyQueueException();
-	}
 }
