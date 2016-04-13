@@ -5,7 +5,7 @@ import org.junit.Test;
 
 
 public class QueueTest {
-	private static final int NUM_OF_THREADS = 500;
+	private static final int NUM_OF_THREADS = 512;
 	@Test
 	public void testSequential() {
 		Queue<Integer> sequentialQueue = new SequentialQueue<Integer>();
@@ -18,12 +18,12 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>(NUM_OF_THREADS+1));
+		testConcurrentQueue(new ArrayQueue<Integer>(NUM_OF_THREADS+10));
 	}
 	
 	@Test
 	public void testTreeQueue(){
-		 testConcurrentQueue(new TreeQueue<Integer>((int)(Math.log(NUM_OF_THREADS / Math.log(2)))+ 1));
+		 testConcurrentQueue(new TreeQueue<Integer>( (int)(Math.log(NUM_OF_THREADS) / Math.log(2) +1)));
 	}
 	
 	@Test
@@ -55,14 +55,14 @@ public class QueueTest {
 	public void testQueueSequentially(Queue<Integer> queue) throws EmptyQueueException{
 		try {
 			queue.removeMin();
-			fail("Empty queue  did not throw excpetion");
+			fail("Empty queue did not throw exception");
 		} catch (EmptyQueueException e) {
 			//Queue should be empty so good
 		}
 		queue.add(5,1);
 		if(queue.removeMin() != 5)
 			fail("Queue did not return 5");
-
+		
 		queue.add(6,4);
 		queue.add(9,3);
 		queue.add(3,2);

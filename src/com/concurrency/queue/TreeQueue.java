@@ -6,10 +6,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class TreeQueue<T> implements Queue<T> {
 	int range;
+	int logRange;
 	  
 	  List<TreeNode> leaves; // array of tree leaves
 	  TreeNode root;     // root of tree
 	  public TreeQueue(int logRange) {
+		 this.logRange = logRange;
 	    range = (1 << logRange);
 	    leaves = new ArrayList<TreeNode>(range);
 	    root = buildTree(logRange, 0);
@@ -52,10 +54,15 @@ public class TreeQueue<T> implements Queue<T> {
 	        node = node.right;
 	      }
 	    }
-	    if(node.bin.get() == null)
+	    
+	    T val = node.bin.get();
+	    if(val == null){
+	        root = buildTree(logRange, 0);
 	    	throw new EmptyQueueException();
-	    return node.bin.get(); // if null pqueue is empty
+	    }
+	    return val; // if null pqueue is empty
 	  }
+	  
 	  public class TreeNode {
 	    AtomicInteger counter;    // bounded counter
 	    TreeNode parent;    // reference to parent
