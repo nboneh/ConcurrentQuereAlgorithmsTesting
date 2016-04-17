@@ -18,7 +18,7 @@ public class QueueTest {
 	
 	@Test
 	public void testArrayQueue(){
-		testConcurrentQueue(new ArrayQueue<Integer>(NUM_OF_THREADS+10));
+		testConcurrentQueue(new ArrayQueue<Integer>(NUM_OF_THREADS+1));
 	}
 	
 	@Test
@@ -28,7 +28,7 @@ public class QueueTest {
 	
 	@Test
 	public void testHeapQueue(){
-		testConcurrentQueue(new HeapQueue<Integer>(NUM_OF_THREADS));
+		testConcurrentQueue(new HeapQueue<Integer>(NUM_OF_THREADS+1));
 	}
 	
 	@Test
@@ -59,7 +59,7 @@ public class QueueTest {
 		} catch (EmptyQueueException e) {
 			//Queue should be empty so good
 		}
-		queue.add(5,1);
+		queue.add(5,6);
 		if(queue.removeMin() != 5)
 			fail("Queue did not return 5");
 		
@@ -75,6 +75,7 @@ public class QueueTest {
 
 		if(queue.removeMin() != 6)
 			fail("Queue did not return 6");
+		
 		try {
 			queue.removeMin();
 			fail("Expected empty queue");
